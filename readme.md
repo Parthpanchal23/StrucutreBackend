@@ -78,6 +78,17 @@ $ npm run dev
 # The server will initialize in the <http://localhost:3000>
 ``` -->
 
+## :folder: Folder Structure
+
+The following folder structure were used in this project:
+
+- Controllers:- Functionality purpose
+- db:- Databse connection logic purpose
+- middlewares :- forchecking every request functionality
+- models
+- routes
+- utils
+
 ## :memo: License
 
 This project is under license from MIT. For more details, see the [LICENSE](LICENSE) file.
