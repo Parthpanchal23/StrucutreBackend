@@ -1,0 +1,17 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Backend structure for node js project schema",
+  "main": "index.js",
+  "scripts": {
+    "test": "\t"
+  },
+  "keywords": [
+    "Javascript",
+    "Backend",
+    "Node",
+    "js"
+  ],
+  "author": "Parth Panchal",
+  "license": "ISC"
+}
