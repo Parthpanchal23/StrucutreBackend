@@ -1,11 +1,19 @@
 import dotenv from "dotenv"
 import connectDB from "./db/index.js";
+import { app } from "./app.js";
 
 dotenv.config({
     path: "./env"
 })
 
-connectDB();
+connectDB().then(() => {
+    let PORT = porcess.env.PORT || 8000;
+    app.listen(PORT, () => {
+        console.log(`Server is Running at  ${PORT} `);
+    })
+}).catch((err) => {
+    console.log("DB conenction failed !!", err);
+})
 
 
 
