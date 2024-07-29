@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "Backend structure for node js project schema",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "\t"
+    "dev": "nodemon src/index.js"
   },
   "keywords": [
     "Javascript",
@@ -13,5 +14,8 @@
     "js"
   ],
   "author": "Parth Panchal",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
 }
