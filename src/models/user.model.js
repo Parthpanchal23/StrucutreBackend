@@ -4,7 +4,7 @@ import bcrypt from "bcrypt"
 const userSchema = new Schema({
     username: {
         type: String,
-        required: [true, 'Username is required'],
+        required: true,
         unique: true,
         lowercase: true,
         trim: true,
@@ -12,23 +12,25 @@ const userSchema = new Schema({
     },
     email: {
         type: String,
-        required: [true, 'Email is required'],
+        required: true,
         unique: true,
         lowercase: true,
         trim: true
     },
     fullName: {
         type: String,
-        required: [true, 'Full name is required'],
+        required: true,
         trim: true,
         index: true
     },
     avatar: {
         type: String,//cloudinary url
-        required: [true, 'Avatar is required']
+        required: true,
+        default: ""
     },
     coverImage: {
         type: String,//cloudinary url
+        default: ""
     },
     watchHistory: [{
         type: Schema.Types.ObjectId,
@@ -36,18 +38,18 @@ const userSchema = new Schema({
     }],
     password: {
         type: String,
-        required: [true, 'Password is required']
+        required: true
     },
     refreshToken: {
         type: String
     }
 }, {
-    timestamps: True
+    timestamps: true
 })
 
 userSchema.pre("save", async function (next) {
     if (!this.isModified("password")) return next()
-    this.password = bcrypt.hash(this.password, 10)
+    this.password = await bcrypt.hash(this.password, 10)
     next()
 })
 
@@ -69,4 +71,4 @@ userSchema.methods.genrateRefreshTokoen = function () {
         _id: this._id
     }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: process.env.RFRESH_TOKEN_EXPIRY })
 }
-export const User = mongoose.model("User", { userSchema })
+export const User = mongoose.model("User", userSchema)
