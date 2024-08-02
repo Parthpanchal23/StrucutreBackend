@@ -3,6 +3,7 @@ import { ApiError } from "../utils/APIError.js"
 import { APIResponse } from "../utils/APIResponse.js";
 import { User } from "../models/user.model.js"
 import { uploadOnCloudinary } from "../utils/cloudinary.js"
+import jwt from "jsonwebtoken";
 
 const generateAcesssAndRefreshToken = async (userId) => {
     try {
@@ -84,7 +85,7 @@ const loginUser = asyncHandler(async (req, res) => {
 
     const { email, username, password } = req?.body;
 
-    if (!username || !email) {
+    if (!username && !email) {
         throw new ApiError(400, "User and password is required")
     }
 
@@ -134,4 +135,36 @@ const logoutUser = asyncHandler(async (req, res) => {
     return res.status(200).
         clearCookie("acessToken", options).clearCookie("refreshToken", options).json(new APIResponse(200, {}, "User Logged out"));
 })
-export { registerUser, loginUser, logoutUser }
+
+const refreshAcessToken = asyncHandler(async (req, res) => {
+    const incomingRefreshToken = req.cookies.refreshToken || req.body.refreshToken;
+    if (!incomingRefreshToken) {
+        throw new ApiError(401, "unauthorized Request")
+    }
+
+    try {
+        const decodedToken = jwt.verify(incomingRefreshToken, process.env.REFRESH_TOKEN_SECRET);
+
+        const user = await User.findById(decodedToken?._id)
+
+        if (!user) {
+            throw new ApiError(401, "Invalid refresh Token")
+        }
+
+        if (incomingRefreshToken !== user?.refreshToken) {
+            throw new ApiError(401, "refresh Token expired")
+        }
+        const options = {
+            httpOnly: true,
+            secure: true
+        }
+
+        const { acessToken, newRefreshToken } = await generateAcesssAndRefreshToken(user?._id);
+
+        return res.status(200).cookie("acessToken", acessToken, options).cookie("refreshToken", newRefreshToken, options), json(new APIResponse(200, { acessToken, refreshToken: newRefreshToken }, "Acess token refreshed"))
+    } catch (error) {
+        throw new ApiError(401, error?.message || "Invalid refresh token")
+    }
+});
+
+export { registerUser, loginUser, logoutUser, refreshAcessToken }
