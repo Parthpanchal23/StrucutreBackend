@@ -36,4 +36,21 @@ app.use("/api/v1/likes", likeRouter)
 app.use("/api/v1/playlist", playlistRouter)
 app.use("/api/v1/dashboard", dashboardRouter)
 
+// rout not found
+app.post("/*", (req, res) => {
+    res.status(400).send({ message: "Rout not found!" });
+});
+
+app.get("/*", (req, res) => {
+    res.status(400).send({ message: "Rout not found!" });
+});
+
+app.delete("/*", (req, res) => {
+    res.status(400).send({ message: "Rout not found!" });
+});
+
+app.put("/*", (req, res) => {
+    res.status(400).send({ message: "Rout not found!" });
+});
+
 export { app };
